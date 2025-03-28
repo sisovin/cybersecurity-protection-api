@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Cybersecurity Protection API
+  description: This API provides secure authentication and data encryption using Argon2, Fernet, PostgreSQL, Redis, and MFA with OTP.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local server
+
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Invalid input
+  /login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+  /encrypt:
+    post:
+      summary: Encrypt data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EncryptRequest'
+      responses:
+        '200':
+          description: Data encrypted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EncryptResponse'
+  /decrypt:
+    post:
+      summary: Decrypt data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecryptRequest'
+      responses:
+        '200':
+          description: Data decrypted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecryptResponse'
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        otp:
+          type: string
+      required:
+        - username
+        - password
+        - otp
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+    EncryptRequest:
+      type: object
+      properties:
+        data:
+          type: string
+      required:
+        - data
+    EncryptResponse:
+      type: object
+      properties:
+        encrypted_data:
+          type: string
+    DecryptRequest:
+      type: object
+      properties:
+        encrypted_data:
+          type: string
+      required:
+        - encrypted_data
+    DecryptResponse:
+      type: object
+      properties:
+        data:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OTPAuth:
+      type: apiKey
+      in: header
+      name: X-OTP
