@@ -1,2 +1,1 @@
-# cybersecurity-protection-api
-A repository for a secure authentication system with encryption and MFA
+This repository is empty. Any task executed on it should be considered a new capability and needs to be created.
